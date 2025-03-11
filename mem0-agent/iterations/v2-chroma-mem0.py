@@ -7,19 +7,13 @@ import os
 load_dotenv()
 
 config = {
-    "llm": {
-        "provider": "openai",
-        "config": {
-            "model": os.getenv('MODEL_CHOICE', 'gpt-4o-mini')
-        }
-    },
     "vector_store": {
-        "provider": "supabase",
+        "provider": "chroma",
         "config": {
-            "connection_string": os.environ['DATABASE_URL'],
-            "collection_name": "memories"
+            "collection_name": "agent_v2_collection",
+            "path": "./chroma_db",
         }
-    }    
+    }
 }
 
 openai_client = OpenAI()

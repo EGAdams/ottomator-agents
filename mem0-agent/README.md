@@ -50,6 +50,11 @@ The `studio-integration-version` folder contains the code used to integrate this
    pip install -r requirements.txt
    ```
 
+   **Alternatively for wsl**:
+   ```bash
+   grep -v "pywin32" requirements.txt | xargs pip install --no-cache-dir
+   ```
+
 3. **Set up environment variables**:
    Copy the `.env.example` file to `.env` and fill in your API keys:
    - `OPENAI_API_KEY`: Your OpenAI API key

@@ -1,5 +1,6 @@
 .env
 venv
+v2_mem0
 __pycache__
 chroma_db
 .gradio
