@@ -18,27 +18,32 @@ config = {"vector_store": {"provider": "chroma", "config": {"collection_name": "
 openai_client = OpenAI()
 memory = Memory.from_config(config)
 
+
 def chat_with_memories(message: str, user_id: str = "default_user") -> str:
+    
     # Retrieve relevant memories
     relevant_memories = memory.search(query=message, user_id=user_id, limit=15)
     memories_str = "\n".join(f"- {entry['memory']}" for entry in relevant_memories["results"])
     system_prompt = f".  Answer the question based on query and memories.\nUser Memories:\n{memories_str}"
     messages = [{"role": "system", "content": system_prompt}, {"role": "user", "content": message}]
     
-    # Generate openai Assistant response
-    response = openai_client.chat.completions.create(model="gpt-4o-mini", messages=messages)
-    assistant_response = response.choices[0].message.content
+    # Generate openai Assistant response and add it to memory
+    # response = openai_client.chat.completions.create(model="gpt-4o-mini", messages=messages)
+    # assistant_response = response.choices[0].message.content
+    # messages.append({"role": "assistant", "content": assistant_response})
     
-    # Generate openai interpreter response
-    # interpreter.system_message += system_prompt
-    # assistant_response = interpreter.chat( message )
+    # Generate openai interpreter response and add it to memory
+    interpreter.system_message += system_prompt
+    interpreter_response = interpreter.chat( message )
+    assistant_response = assistant_response = interpreter_response[-1]['content'] # for interpreter
+    messages.append({"role": "assistant", "content": assistant_response }) # for interpreter
+    
+    
 
     # Create new memories from the conversation
-    # messages.append({"role": "assistant", "content": assistant_response[ 0 ][ 'content' ]}) # for interpreter
-    messages.append({"role": "assistant", "content": assistant_response})
     memory.add(messages, user_id=user_id)
 
-    # return assistant_response[ 0 ][ 'content' ] # for interpreter
+    # return assistant response
     return assistant_response
 
 def main():
