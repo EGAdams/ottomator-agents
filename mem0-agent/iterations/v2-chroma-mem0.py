@@ -25,21 +25,21 @@ def chat_with_memories(message: str, user_id: str = "default_user") -> str:
     system_prompt = f".  Answer the question based on query and memories.\nUser Memories:\n{memories_str}"
     messages = [{"role": "system", "content": system_prompt}, {"role": "user", "content": message}]
     
-    # Generate openai Assistant response
-    response = openai_client.chat.completions.create(model="gpt-4o-mini", messages=messages)
-    assistant_response = response.choices[0].message.content
+    # Generate openai Assistant response   #  # uncomment for openai
+    # response = openai_client.chat.completions.create(model="gpt-4o-mini", messages=messages)
+    # assistant_response = response.choices[0].message.content
     
     # Generate openai interpreter response
-    # interpreter.system_message += system_prompt
-    # assistant_response = interpreter.chat( message )
+    interpreter.system_message += system_prompt       # uncomment for interpreter
+    assistant_response = interpreter.chat( message )
 
     # Create new memories from the conversation
-    # messages.append({"role": "assistant", "content": assistant_response[ 0 ][ 'content' ]}) # for interpreter
-    messages.append({"role": "assistant", "content": assistant_response})
+    messages.append({"role": "assistant", "content": assistant_response[ 0 ][ 'content' ]}) # for interpreter
+    # messages.append({"role": "assistant", "content": assistant_response})
     memory.add(messages, user_id=user_id)
 
-    # return assistant_response[ 0 ][ 'content' ] # for interpreter
-    return assistant_response
+    return assistant_response[ 0 ][ 'content' ] # for interpreter
+    # return assistant_response
 
 def main():
     print("\nChat with Chroma Interpreter with mem0 ( type 'exit', 'x', or 'q' to quit) ")
