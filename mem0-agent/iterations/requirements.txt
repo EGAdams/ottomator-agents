@@ -86,7 +86,6 @@ Pygments==2.19.1
 python-dateutil==2.9.0.post0
 python-dotenv==1.0.1
 pytz==2024.2
-pywin32==308
 PyYAML==6.0.2
 qdrant-client==1.13.3
 realtime==2.4.1

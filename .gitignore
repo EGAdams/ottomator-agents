@@ -4,3 +4,5 @@ v2_mem0
 __pycache__
 chroma_db
 .gradio
+mem0-agent/iterations/.mem0_environment
+
