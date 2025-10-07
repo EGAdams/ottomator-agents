@@ -5,15 +5,21 @@ from openai import OpenAI
 from mem0 import Memory
 import supabase
 from supabase.client import Client, ClientOptions
+from pathlib import Path
 import uuid
+import sys
 
 # Load environment variables
-load_dotenv()
+project_root = Path(__file__).resolve().parent.parent
+dotenv_path = project_root / '.env'
+load_dotenv(dotenv_path, override=True)
 
 # Initialize Supabase client
-supabase_url = os.environ.get("SUPABASE_URL", "https://gewcfncoqvxnkrbpfonk.supabase.co")
+supabase_url = os.environ.get("SUPABASE_URL", "")
 supabase_key = os.environ.get("SUPABASE_KEY", "")
 supabase_client = supabase.create_client(supabase_url, supabase_key)
+
+model = os.getenv('MODEL_CHOICE', 'gpt-4o-mini')
 
 # Streamlit page configuration
 st.set_page_config(
@@ -34,7 +40,7 @@ def get_memory():
         "llm": {
             "provider": "openai",
             "config": {
-                "model": "gpt-4o-mini"
+                "model": model
             }
         },
         "vector_store": {
@@ -110,7 +116,7 @@ def chat_with_memories(message, user_id):
     messages = [{"role": "system", "content": system_prompt}, {"role": "user", "content": message}]
     
     with st.spinner("Thinking..."):
-        response = openai_client.chat.completions.create(model="gpt-4o-mini", messages=messages)
+        response = openai_client.chat.completions.create(model=model, messages=messages)
         assistant_response = response.choices[0].message.content
 
     # Create new memories from the conversation
