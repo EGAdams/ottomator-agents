@@ -18,7 +18,9 @@ config = {"vector_store": {"provider": "chroma", "config": {"collection_name": "
 openai_client = OpenAI()
 memory = Memory.from_config(config)
 
+
 def chat_with_memories(message: str, user_id: str = "default_user") -> str:
+    
     # Retrieve relevant memories
     relevant_memories = memory.search(query=message, user_id=user_id, limit=15)
     memories_str = "\n".join(f"- {entry['memory']}" for entry in relevant_memories["results"])
@@ -40,6 +42,24 @@ def chat_with_memories(message: str, user_id: str = "default_user") -> str:
 
     return assistant_response[ 0 ][ 'content' ] # for interpreter
     # return assistant_response
+    # Generate openai Assistant response and add it to memory
+    # response = openai_client.chat.completions.create(model="gpt-4o-mini", messages=messages)
+    # assistant_response = response.choices[0].message.content
+    # messages.append({"role": "assistant", "content": assistant_response})
+    
+    # Generate openai interpreter response and add it to memory
+    # interpreter.system_message += system_prompt
+    # interpreter_response = interpreter.chat( message )
+    # assistant_response = assistant_response = interpreter_response[-1]['content'] # for interpreter
+    # messages.append({"role": "assistant", "content": assistant_response }) # for interpreter
+    
+    
+
+    # Create new memories from the conversation
+    memory.add(messages, user_id=user_id)
+
+    # return assistant response
+    return assistant_response
 
 def main():
     print("\nChat with Chroma Interpreter with mem0 ( type 'exit', 'x', or 'q' to quit) ")
